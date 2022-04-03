@@ -1,63 +1,77 @@
 package br.com.mateus.cliente.http.controller;
 
 
+import br.com.mateus.cliente.document.ClienteRedis;
+import br.com.mateus.cliente.dto.ClienteRequestDTO;
+import br.com.mateus.cliente.dto.ClienteResponseDTO;
 import br.com.mateus.cliente.entity.Cliente;
 import br.com.mateus.cliente.service.ClienteService;
-import org.modelmapper.ModelMapper;
+import br.com.mateus.cliente.service.ClienteServiceRedis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("cliente")
 public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ClienteServiceRedis clienteServiceRedis;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Cliente salvar(@RequestBody Cliente cliente){
-        return clienteService.salvar(cliente);
+    public ClienteResponseDTO criarCliente(@Validated @RequestBody ClienteRequestDTO clienteRequestDTO){
+
+        ClienteResponseDTO clienteSalvo = clienteService.criar(clienteRequestDTO);
+        return clienteSalvo;
     }
+    @PostMapping ("async")
+    public ClienteRedis criarClienteRedis (@Validated @RequestBody ClienteRequestDTO clienteRequestDTO){
+        ClienteRedis clienteSalvo = clienteServiceRedis.salvar(clienteRequestDTO);
+        return clienteSalvo;
+    }
+    @PutMapping("async")
+    public void sicronizarClienteBancoDados(){
+        clienteService.sicronizarClienteBancoDados();
+    }
+
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<Cliente> listaCliente(){
-        return clienteService.listaCliente();
+    public List<ClienteResponseDTO> listarClientes(@RequestParam(required = false) String nome){
+        return clienteService.listarClientes(nome);
     }
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Cliente buscarClientePorId(@PathVariable ("id") Long id){
-        return clienteService.buscarPorId(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+    @GetMapping("/{email}/email")
+    public ClienteResponseDTO consultarPorEmail(@PathVariable String email){
+        return clienteService.consultarPorEmail(email);
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/{cpf}/cpf")
+    public ClienteResponseDTO consultarPorCpf( @PathVariable String cpf){
+        return clienteService.consultarPorCpf(cpf);
+    }
+
+    @DeleteMapping("/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removerCliente(@PathVariable("id") Long id) {
-        clienteService.buscarPorId(id)
-                .map(cliente ->{
-                   clienteService.removerPorId(cliente.getId());
-                   return Void.TYPE;
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+    public void deletarCliente(@PathVariable String email) throws Exception {
+        clienteService.deletarCliente(email);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{email}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void atualizarCliente(@PathVariable("id") Long id, @RequestBody Cliente cliente){
-        clienteService.buscarPorId(id)
-                .map(clienteBase -> {
-                    modelMapper.map(cliente, clienteBase);
-                   return Void.TYPE;
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+    public void atualizarCliente(@PathVariable String email, @Validated @RequestBody ClienteRequestDTO clienteRequestDTO) throws Exception {
+        clienteService.atualizarCliente(clienteRequestDTO, email);
     }
+
+
+
+
+
 
 }
