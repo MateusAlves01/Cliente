@@ -25,7 +25,6 @@ import java.util.*;
 public class ClienteService {
     private final int MINUTO = 1000 * 60;
     private final int MINUTOS = MINUTO * 1;
-
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -45,9 +44,9 @@ public class ClienteService {
         return convertClienteResponseDTO(clienteSalvo);
     }
 
-
     @Cacheable("clientes")
-    public List<ClienteResponseDTO> ListarClientes(String nome){
+    public List<ClienteResponseDTO> listarClientes(String nome) {
+
         List<Cliente> clienteList = null;
 
         if (nome == null) {
@@ -55,7 +54,8 @@ public class ClienteService {
         } else {
             clienteList = (List<Cliente>) clienteRepository.findByNomeContainingIgnoreCase(nome);
         }
-        Collections.sort(clienteList, Comparator.comparing(Cliente:: getNome));
+
+        Collections.sort(clienteList, Comparator.comparing(Cliente::getNome));
 
         List<ClienteResponseDTO> clienteResponseDTOList = new ArrayList<>();
 
@@ -63,10 +63,10 @@ public class ClienteService {
             ClienteResponseDTO clienteResponseDTO = convertClienteResponseDTO(cliente);
             clienteResponseDTOList.add(clienteResponseDTO);
         });
-
         return clienteResponseDTOList;
     }
-    @Cacheable ("clientes")
+
+    @Cacheable("clientes")
     public ClienteResponseDTO consultarPorCpf(String cpf) {
         cpf = TextoUltils.removeEspecialCaracter(cpf);
         if (!TextoUltils.contemTexto(cpf)) {
@@ -75,14 +75,16 @@ public class ClienteService {
         }
         return null;
     }
+
     @CacheEvict(value = "clientes", allEntries = true)
     public void deletarCliente(String email) throws Exception {
         Cliente cliente = clienteRepository.findByEmail(email);
         if (cliente == null) {
-            throw new Exception("Cliente não encontrado. Verifique seu e-mail !");
+            throw new Exception("Cliente não encontrado. Verifique o Email digitado.");
         }
         clienteRepository.deleteById(cliente.getId());
     }
+
     @Cacheable("clientes")
     public ClienteResponseDTO consultarPorEmail(String email) {
         Cliente cliente = clienteRepository.findByEmail(email);

@@ -1,14 +1,20 @@
 package br.com.mateus.cliente.dto;
 
 
-import com.sun.istack.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
+
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 
 @Data
 @Builder
@@ -16,7 +22,7 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 public class ClienteRequestDTO {
 
-    @NotNull(message = "Nome é Obrigatório !")
+    @NotNull(message = "Nome é Obrigatório.")
     @Length(min = 3, max = 255)
     private String nomeCompleto;
 
@@ -34,6 +40,7 @@ public class ClienteRequestDTO {
 
     @Length(min = 5, max = 30)
     private String telefone;
+
 
 
 

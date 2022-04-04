@@ -4,14 +4,16 @@ import br.com.mateus.cliente.document.ClienteRedis;
 import br.com.mateus.cliente.dto.ClienteRequestDTO;
 import br.com.mateus.cliente.entity.Cliente;
 import br.com.mateus.cliente.repository.ClienteRedisRepository;
+import br.com.mateus.cliente.utils.TextoUltils;
 import ch.qos.logback.core.net.server.Client;
 import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-@Log4j
+@Log4j2
 @Service
 public class ClienteServiceRedis {
 
