@@ -105,6 +105,8 @@ public class ClienteService {
         List<ClienteRedis> clienteRedisList = (List<ClienteRedis>) clienteRedisRepository.findAll();
 
         if (CollectionUtils.isEmpty(clienteRedisList)) {
+            log.info("Lista de clientes Redis nula ou invalida.");
+        } else{
             List<Cliente> clienteList = new ArrayList<>();
             clienteRedisList.stream().forEach(
                     clienteRedis -> {
@@ -115,10 +117,7 @@ public class ClienteService {
             );
             clienteRepository.saveAll(clienteList);
             clienteRedisRepository.deleteAll(clienteRedisList);
-        } else{
-            log.info("Lista de clientes Redis nula ou invalida.");
         }
-
     }
 
 

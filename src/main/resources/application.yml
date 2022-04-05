@@ -6,12 +6,15 @@ spring:
       port: 6379
 
   datasource:
-    url: jdbc:mysql://localhost:3306/clientes_db?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3307/clientes_db?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
     username: root
-    password: jardel894
+    password: mateus
+
+
 
   jpa:
-    hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate.ddl-auto: update
     hibernate:
       jdbc: time_zone = TimeZone

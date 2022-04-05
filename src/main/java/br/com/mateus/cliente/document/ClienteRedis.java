@@ -2,8 +2,9 @@ package br.com.mateus.cliente.document;
 
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-import javax.persistence.Id;
+
 
 @Getter
 @Setter
@@ -12,7 +13,6 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-
 public class ClienteRedis {
 
     @Id

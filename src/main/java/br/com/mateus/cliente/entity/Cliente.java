@@ -1,19 +1,16 @@
 package br.com.mateus.cliente.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Data // Criar Gets e Sets e ToString
+@Getter
+@Setter // Criar Gets e Sets e ToString
 @AllArgsConstructor //Criar construtor com as propriedades
 @NoArgsConstructor // Cria um constructor vazio sem argumentos
 @Builder //Ajuda na constrção de objetos clientes
 @Entity // Informa que é um entidade do BD
-
 public class Cliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
